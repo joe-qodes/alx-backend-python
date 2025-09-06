@@ -10,10 +10,10 @@ def stream_users_in_batches(batch_size):
         password="RootPass123!",
         database="ALX_prodev"
     )
-    cursor = conn.cursor(dictionary=True)  # fetch rows as dictionaries
+    cursor = conn.cursor(dictionary=True)
     offset = 0
 
-    while True:  # 1st loop
+    while True:
         cursor.execute(
             "SELECT user_id, name, email, age FROM user_data LIMIT %s OFFSET %s",
             (batch_size, offset)
@@ -30,17 +30,19 @@ def stream_users_in_batches(batch_size):
 
 def batch_processing(batch_size):
     """
-    Process each batch to filter users over age 25.
+    Returns a generator that processes each batch to filter users over age 25.
     """
-    for batch in stream_users_in_batches(batch_size):  # 2nd loop
-        # List comprehension counts as 1 loop internally
-        filtered = [user for user in batch if int(user["age"]) > 25]
-        yield filtered
+    def generator():
+        for batch in stream_users_in_batches(batch_size):
+            filtered = [user for user in batch if int(user["age"]) > 25]
+            yield filtered
+
+    return generator()  # <- now we return the generator
 
 
 # Example usage
 if __name__ == "__main__":
-    for processed_batch in batch_processing(batch_size=3):  # 3rd loop (optional)
+    for processed_batch in batch_processing(batch_size=3):
         print("Processed batch:")
         for user in processed_batch:
             print(user)
