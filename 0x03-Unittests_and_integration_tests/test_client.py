@@ -34,6 +34,7 @@ class TestGithubOrgClient(unittest.TestCase):
         known_payload = {
             "repos_url": "https://api.github.com/orgs/google/repos"
         }
+        expected = "https://api.github.com/orgs/google/repos"  # Define expected
         
         with patch.object(GithubOrgClient, 'org', 
                          new_callable=PropertyMock, 
@@ -41,9 +42,8 @@ class TestGithubOrgClient(unittest.TestCase):
             client = GithubOrgClient("google")
             result = client._public_repos_url
             
-            self.assertEqual(result, "https://api.github.com/orgs/google/repos")
+            self.assertEqual(result, expected)
             mock_org.assert_called_once()
-        self.assertEqual(result, expected)
 
 
 if __name__ == "__main__":
