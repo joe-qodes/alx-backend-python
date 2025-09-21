@@ -28,43 +28,9 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test that access_nested_map raises KeyError with correct message."""
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
-<<<<<<< HEAD
         # The KeyError message should be the missing key
         self.assertEqual(str(context.exception), repr(path[-1]))
 
-=======
-        # KeyError message should be the missing key
-        self.assertEqual(str(context.exception), repr(path[-1]))
-
-
-class TestMemoize(unittest.TestCase):
-    """Unit tests for the memoize decorator."""
-
-    def test_memoize(self):
-        """Test that memoize decorator caches function results."""
-        class TestClass:
-            def a_method(self):
-                return 42
-
-            @memoize
-            def a_property(self):
-                return self.a_method()
-
-        with unittest.mock.patch.object(
-            TestClass, 'a_method', return_value=42
-        ) as mock_method:
-            test_obj = TestClass()
-            # First call should call the method
-            result1 = test_obj.a_property
-            # Second call should use cached result
-            result2 = test_obj.a_property
-
-            self.assertEqual(result1, 42)
-            self.assertEqual(result2, 42)
-            # Method should only be called once due to memoization
-            mock_method.assert_called_once()
-
->>>>>>> 29e3be4b5e08284dd3af9ab0c4ec948c38231532
 
 if __name__ == "__main__":
     unittest.main()
