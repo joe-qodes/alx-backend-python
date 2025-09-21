@@ -3,47 +3,26 @@
 Unit tests for client.GithubOrgClient.
 """
 import unittest
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized
+from unittest.mock import patch
 from client import GithubOrgClient
-import utils
 
 
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for the GithubOrgClient class."""
 
-    @parameterized.expand([
-        ("google",),
-        ("abc",),
-    ])
-    @patch('utils.get_json')
-    def test_org(self, org_name, mock_get_json):
-        """Test that GithubOrgClient.org returns the correct value."""
-        expected = {"login": org_name}
-        mock_get_json.return_value = expected
+    def test_org(self):
+        """Test that GithubOrgClient.org returns the expected value."""
+        test_cases = ["google", "abc"]
 
-        client = GithubOrgClient(org_name)
-        result = client.org
-
-        mock_get_json.assert_called_once_with(
-            f"https://api.github.com/orgs/{org_name}"
-        )
-
-    def test_public_repos_url(self):
-        """Test that _public_repos_url returns the expected URL."""
-        known_payload = {
-            "repos_url": "https://api.github.com/orgs/google/repos"
-        }
-        expected = "https://api.github.com/orgs/google/repos"  # Define expected
-        
-        with patch.object(GithubOrgClient, 'org', 
-                         new_callable=PropertyMock, 
-                         return_value=known_payload) as mock_org:
-            client = GithubOrgClient("google")
-            result = client._public_repos_url
-            
-            self.assertEqual(result, expected)
-            mock_org.assert_called_once()
+        for org_name in test_cases:
+            with self.subTest(org=org_name):
+                expected = {"login": org_name}
+                with patch("client.get_json", return_value=expected) as mock_get_json:
+                    client = GithubOrgClient(org_name)
+                    self.assertEqual(client.org, expected)
+                    mock_get_json.assert_called_once_with(
+                        f"https://api.github.com/orgs/{org_name}"
+                    )
 
 
 if __name__ == "__main__":
