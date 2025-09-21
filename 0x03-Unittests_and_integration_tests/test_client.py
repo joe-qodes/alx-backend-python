@@ -43,5 +43,3 @@ class TestGithubOrgClient(unittest.TestCase):
             result = client._public_repos_url
 
             self.assertEqual(result, expected_url)
-
-
