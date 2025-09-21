@@ -29,7 +29,9 @@ class TestAccessNestedMap(unittest.TestCase):
 
         self.assertEqual(
             str(ctx.exception),
-            repr(path[-1])
+            repr(
+                path[-1]
+            )
         )
 
 
