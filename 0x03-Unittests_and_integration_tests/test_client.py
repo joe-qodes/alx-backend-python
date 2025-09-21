@@ -25,7 +25,6 @@ class TestGithubOrgClient(TestCase):
 
         client = GithubOrgClient(org_name)
         self.assertEqual(client.org, expected)
-
         mock_get_json.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}"
         )
@@ -83,14 +82,17 @@ class TestGithubOrgClient(TestCase):
         )
 
 
-@parameterized_class([
-    {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos,
-    }
-])
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    [
+        {
+            "org_payload": org_payload,
+            "repos_payload": repos_payload,
+            "expected_repos": expected_repos,
+            "apache2_repos": apache2_repos,
+        }
+    ]
+)
 class TestIntegrationGithubOrgClient(TestCase):
     """Integration tests for GithubOrgClient.public_repos."""
 
@@ -98,15 +100,14 @@ class TestIntegrationGithubOrgClient(TestCase):
     def setUpClass(cls):
         """Start patcher for requests.get and set side_effect."""
         cls.get_patcher = patch("requests.get")
-
         mock_get = cls.get_patcher.start()
 
-        def side_effect(url):
+        def side_effect(url, *args, **kwargs):
             if url == "https://api.github.com/orgs/google":
                 return MockResponse(cls.org_payload)
             if url == "https://api.github.com/orgs/google/repos":
                 return MockResponse(cls.repos_payload)
-            return None
+            return MockResponse(None)
 
         mock_get.side_effect = side_effect
 
