@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+Integration tests for GithubOrgClient.public_repos.
+"""
+
 from unittest import TestCase
 from unittest.mock import patch
 from parameterized import parameterized_class
@@ -7,7 +11,7 @@ from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class MockResponse:
-    """Mock requests.get response to simulate .json()"""
+    """Mock response object to simulate requests.get().json()."""
     def __init__(self, payload):
         self._payload = payload
 
@@ -26,7 +30,7 @@ class TestIntegrationGithubOrgClient(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Mock requests.get to return example fixture payloads."""
+        """Mock requests.get to return fixture payloads."""
         cls.get_patcher = patch("requests.get")
         cls.mock_get = cls.get_patcher.start()
 
@@ -50,7 +54,7 @@ class TestIntegrationGithubOrgClient(TestCase):
         self.assertEqual(client.public_repos(), self.expected_repos)
 
     def test_public_repos_with_license(self):
-        """Test public_repos with license filter."""
+        """Test public_repos with license filter 'apache-2.0'."""
         client = GithubOrgClient("google")
         self.assertEqual(
             client.public_repos(license="apache-2.0"),
