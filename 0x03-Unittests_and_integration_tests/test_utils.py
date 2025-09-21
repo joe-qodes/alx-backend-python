@@ -27,9 +27,10 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError) as ctx:
             access_nested_map(nested_map, path)
 
-        expected_message = repr(path[-1])
-        actual_message = str(ctx.exception)
-        self.assertEqual(actual_message, expected_message)
+        self.assertEqual(
+            str(ctx.exception),
+            repr(path[-1])
+        )
 
 
 class TestGetJson(unittest.TestCase):
