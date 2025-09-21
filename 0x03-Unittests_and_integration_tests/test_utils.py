@@ -28,7 +28,7 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
         self.assertEqual(
             str(ctx.exception),
-            repr(path[-1])
+            repr(path[-1]),
         )
 
 
@@ -68,7 +68,7 @@ class TestMemoize(unittest.TestCase):
         with patch.object(
             TestClass,
             "a_method",
-            return_value=42
+            return_value=42,
         ) as mock_method:
             obj = TestClass()
             self.assertEqual(obj.a_property, 42)
